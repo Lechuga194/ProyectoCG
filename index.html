@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Proyecto | Graficacion</title>
+    <script type="module" src="./js/Main.js"></script>
+    <link rel="stylesheet" href="css/index.css" type="text/css" />
+  </head>
+
+  <body>
+    <form action="" method="POST" enctype="multipart/form-data">
+      <label for="file">Introduce el archivo .Obj</label>
+      <input id="myFile" type="file" name="file" />
+    </form>
+    <canvas id="the_canvas" width="800" height="600"></canvas>
+    <form action="" method="POST">
+      <p>Posición de la cámara</p>
+      <label for="camx">X:</label>
+      <input id="camaraX" type="number" name="camx" />
+      <label for="camy">Y:</label>
+      <input id="camaraY" type="number" name="camy" />
+      <label for="camz">Z:</label>
+      <input id="camaraZ" type="number" name="camz" />
+
+      <p>Posición del centro de interés</p>
+      <label for="interx">X:</label>
+      <input id="interX" type="number" name="interx" />
+      <label for="intery">Y:</label>
+      <input id="interY" type="number" name="intery" />
+      <label for="interz">Z:</label>
+      <input id="interZ" type="number" name="interz" />
+    </form>
+  </body>
+</html>
