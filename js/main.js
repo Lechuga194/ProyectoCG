@@ -44,8 +44,12 @@ let matrizProyeccion = Matrix4.perspective(
 // se crea una matrix que conjunta las transformaciones de la cámara y de la proyección
 let vistaProyeccion = Matrix4.multiply(matrizProyeccion, vista);
 
+/**
+ * Maneja los eventos para cuando cambian los input de la camara o el centro de interes
+ */
 inputXYZ.forEach(function(input) {
   input.addEventListener("change", function() {
+    canvas.width = canvas.width; //Esto es para limpiar el canvas por completo
     camara = new Vector3(camX.value, camY.value, camZ.value);
     pi = new Vector3(interX.value, interY.value, interZ.value);
     vista = Matrix4.lookAt(camara, pi, new Vector3(0, 1, 0));
