@@ -576,6 +576,39 @@ export class Matrix4 {
     return mulVect;
   }
 
+  // /**
+  //  * función que devuelve una matriz que corresponde a una proyección ortogonal,
+  //  * determinada por los planos dados por los parámetros left, right, bottom, top, near y far.
+  //  * @param {Number} left
+  //  * @param {Number} right
+  //  * @param {Number} bottom
+  //  * @param {Number} top
+  //  * @param {Number} near
+  //  * @param {Number} far
+  //  * @return {Matrix4}
+  //  */
+  // static ortho(left, right, bottom, top, near, far) {
+  //   const ortho = new Matrix4(
+  //     2 / right - left,
+  //     0,
+  //     0,
+  //     -(right + left) / (right - left),
+  //     0,
+  //     2 / top - bottom,
+  //     0,
+  //     -(top + bottom) / (top - bottom),
+  //     0,
+  //     0,
+  //     -2 / (far - near),
+  //     -(far + near) / (far - near),
+  //     0,
+  //     0,
+  //     0,
+  //     1
+  //   );
+  //   return ortho.transpose();
+  // }
+
   /**
    * función que devuelve una matriz que corresponde a una proyección ortogonal,
    * determinada por los planos dados por los parámetros left, right, bottom, top, near y far.
@@ -592,21 +625,21 @@ export class Matrix4 {
       2 / right - left,
       0,
       0,
-      -(right + left) / (right - left),
+      0,
       0,
       2 / top - bottom,
       0,
-      -(top + bottom) / (top - bottom),
+      0,
       0,
       0,
       -2 / (far - near),
+      0,
+      -(right + left) / (right - left),
+      -(top + bottom) / (top - bottom),
       -(far + near) / (far - near),
-      0,
-      0,
-      0,
       1
     );
-    return ortho.transpose();
+    return ortho;
   }
 
   /**
@@ -619,8 +652,7 @@ export class Matrix4 {
    * @return {Matrix4}
    */
   static perspective(fovy, aspect, near, far) {
-    const fov = this.degreeToRadian(fovy);
-    const f = Math.tan(Math.PI * 0.5 - 0.5 * fov);
+    const f = Math.tan(Math.PI * 0.5 - 0.5 * fovy);
     const rango = 1 / (near - far);
 
     const perspective = new Matrix4(
@@ -641,15 +673,7 @@ export class Matrix4 {
       near * far * rango * 2,
       0
     );
-    return perspective;
-  }
-
-  /**
-   * Metodo auxiliar que convierte grados a radianes
-   * @param {Number} x
-   */
-  static degreeToRadian(x) {
-    return x * (Math.PI / 180);
+    return perspective.transpose();
   }
 
   /**
@@ -659,9 +683,8 @@ export class Matrix4 {
    * @return {Matrix4}
    */
   static rotateX(theta) {
-    const g = this.degreeToRadian(theta);
-    const cos = Math.cos(g);
-    const sin = Math.sin(g);
+    const cos = Math.cos(theta);
+    const sin = Math.sin(theta);
     const rotatex = new Matrix4(
       1,
       0,
@@ -690,9 +713,8 @@ export class Matrix4 {
    * @return {Matrix4}
    */
   static rotateY(theta) {
-    const g = this.degreeToRadian(theta);
-    const cos = Math.cos(g);
-    const sin = Math.sin(g);
+    const cos = Math.cos(theta);
+    const sin = Math.sin(theta);
     const rotatey = new Matrix4(
       cos,
       0,
@@ -721,9 +743,8 @@ export class Matrix4 {
    * @return {Matrix4}
    */
   static rotateZ(theta) {
-    const g = this.degreeToRadian(theta);
-    const cos = Math.cos(g);
-    const sin = Math.sin(g);
+    const cos = Math.cos(theta);
+    const sin = Math.sin(theta);
     const rotatez = new Matrix4(
       cos,
       sin,
