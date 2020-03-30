@@ -33,14 +33,17 @@ let vertices = [0]; //Arreglo que guardara los vertices (inicia con 0 por que lo
 let caras = []; //Arreglo que guardara las caras
 let camara = new Vector3(5, 5, 5); //Define la posicion de la camara
 let pi = new Vector3(0, 0, 0); //Definie el punto de interes
-let vista = Matrix4.lookAt(camara, pi, new Vector3(0, 1, 0)); //Matriz de vista
-// se crea una matriz de proyección de perspectiva con un campo de visión (fov) de 75 grados, una distancia cercana de 0.1 y una lejana de 2000 (unidades)
+let vistaAux = new Vector3(0, 1, 0);
+let vista = Matrix4.lookAt(camara, pi, vistaAux); //Matriz de vista
+
+//Matriz de perspectiva
 let matrizProyeccion = Matrix4.perspective(
-  (75 * Math.PI) / 180,
+  (90 * Math.PI) / 180,
   canvas.width / canvas.height,
   0.1,
   2000
 );
+
 // se crea una matrix que conjunta las transformaciones de la cámara y de la proyección
 let vistaProyeccion = Matrix4.multiply(matrizProyeccion, vista);
 
@@ -144,7 +147,7 @@ function addVertices() {
  */
 function dibuja() {
   let vertex;
-  ctx.strokeStyle = " rgb(255, 255, 255)";
+  ctx.strokeStyle = " rgb(233, 178, 188)";
   caras.forEach(cara => {
     cara.forEach((vertex_index, index) => {
       // transformacion de vertices
@@ -153,7 +156,9 @@ function dibuja() {
         canvas.height,
         vistaProyeccion.multiplyVector(vertices[vertex_index])
       );
-
+      if (index == 0) {
+        ctx.moveTo(vertex.x, vertex.y);
+      }
       ctx.lineTo(vertex.x, vertex.y);
     });
 
