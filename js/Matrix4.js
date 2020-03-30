@@ -576,39 +576,6 @@ export class Matrix4 {
     return mulVect;
   }
 
-  // /**
-  //  * función que devuelve una matriz que corresponde a una proyección ortogonal,
-  //  * determinada por los planos dados por los parámetros left, right, bottom, top, near y far.
-  //  * @param {Number} left
-  //  * @param {Number} right
-  //  * @param {Number} bottom
-  //  * @param {Number} top
-  //  * @param {Number} near
-  //  * @param {Number} far
-  //  * @return {Matrix4}
-  //  */
-  // static ortho(left, right, bottom, top, near, far) {
-  //   const ortho = new Matrix4(
-  //     2 / right - left,
-  //     0,
-  //     0,
-  //     -(right + left) / (right - left),
-  //     0,
-  //     2 / top - bottom,
-  //     0,
-  //     -(top + bottom) / (top - bottom),
-  //     0,
-  //     0,
-  //     -2 / (far - near),
-  //     -(far + near) / (far - near),
-  //     0,
-  //     0,
-  //     0,
-  //     1
-  //   );
-  //   return ortho.transpose();
-  // }
-
   /**
    * función que devuelve una matriz que corresponde a una proyección ortogonal,
    * determinada por los planos dados por los parámetros left, right, bottom, top, near y far.

@@ -7,7 +7,6 @@
 import { Vector3 } from "./Vector3.js";
 import { Vector4 } from "./Vector4.js";
 import { Matrix4 } from "./Matrix4.js";
-import { Matrix3 } from "./Matrix3.js";
 
 //Definicion del canvas y contexto de dibujo
 let canvas = document.getElementById("the_canvas");
@@ -16,13 +15,25 @@ const ctx = document.getElementById("the_canvas").getContext("2d");
 //Seleccion de el documento
 const input = document.querySelector('input[type="file"]');
 
+//Seleccion de variables para camara
+let camX = document.getElementById("camaraX");
+let camY = document.getElementById("camaraY");
+let camZ = document.getElementById("camaraZ");
+
+//seleccion de variables para el punto de interes
+let interX = document.getElementById("interesX");
+let interY = document.getElementById("interesY");
+let interZ = document.getElementById("interesZ");
+
+//Agregamos las variables a un arreglo
+let inputXYZ = [camX, camY, camZ, interX, interY, interZ];
+
 let verticesAux = []; //Arreglo auxiliar para guardar los vertices del parseo
-let vertices = [0]; //Arreglo que guardara los vertices
+let vertices = [0]; //Arreglo que guardara los vertices (inicia con 0 por que los obj cuentan desde 1)
 let caras = []; //Arreglo que guardara las caras
-let camara = new Vector3(3, 2, 4); //Define la posicion de la camara
+let camara = new Vector3(5, 5, 5); //Define la posicion de la camara
 let pi = new Vector3(0, 0, 0); //Definie el punto de interes
 let vista = Matrix4.lookAt(camara, pi, new Vector3(0, 1, 0)); //Matriz de vista
-
 // se crea una matriz de proyección de perspectiva con un campo de visión (fov) de 75 grados, una distancia cercana de 0.1 y una lejana de 2000 (unidades)
 let matrizProyeccion = Matrix4.perspective(
   (75 * Math.PI) / 180,
@@ -32,6 +43,16 @@ let matrizProyeccion = Matrix4.perspective(
 );
 // se crea una matrix que conjunta las transformaciones de la cámara y de la proyección
 let vistaProyeccion = Matrix4.multiply(matrizProyeccion, vista);
+
+inputXYZ.forEach(function(input) {
+  input.addEventListener("change", function() {
+    camara = new Vector3(camX.value, camY.value, camZ.value);
+    pi = new Vector3(interX.value, interY.value, interZ.value);
+    vista = Matrix4.lookAt(camara, pi, new Vector3(0, 1, 0));
+    vistaProyeccion = Matrix4.multiply(matrizProyeccion, vista);
+    dibuja();
+  });
+});
 
 /**
  * Esta función en necesaria ya que estamos usando 2D para dibujar los objetos 3D
@@ -96,30 +117,7 @@ input.addEventListener(
         }
       });
       addVertices();
-      let vertex;
-      ctx.strokeStyle = " rgb(255, 255, 255)";
-      ctx.fillRect(10, 10, 100, 100);
-      caras.forEach(cara => {
-        cara.forEach((vertex_index, index) => {
-          // transformamos los vértices con la matriz de vista y proyección, realizando simplemente una multiplicación
-          vertex = vistaProyeccion.multiplyVector(vertices[vertex_index]);
-
-          // transformamos los vértices a coordenadas de pantalla para dibujarlos
-          vertex = imageTransform(canvas.width, canvas.height, vertex);
-
-          if (index === 0) {
-            ctx.moveTo(vertex.x, vertex.y);
-          } else {
-            ctx.lineTo(vertex.x, vertex.y);
-          }
-        });
-
-        ctx.closePath();
-        ctx.stroke();
-      });
-
-      console.log(vertices);
-      console.log(caras);
+      dibuja();
     };
   },
   false
@@ -135,4 +133,27 @@ function addVertices() {
       new Vector4(verticesAux[i][0], verticesAux[i][1], verticesAux[i][2], 1)
     );
   }
+}
+
+/**
+ * Funcion que dibuja las caras sobre el canvas
+ */
+function dibuja() {
+  let vertex;
+  ctx.strokeStyle = " rgb(255, 255, 255)";
+  caras.forEach(cara => {
+    cara.forEach((vertex_index, index) => {
+      // transformacion de vertices
+      vertex = imageTransform(
+        canvas.width,
+        canvas.height,
+        vistaProyeccion.multiplyVector(vertices[vertex_index])
+      );
+
+      ctx.lineTo(vertex.x, vertex.y);
+    });
+
+    ctx.closePath();
+    ctx.stroke();
+  });
 }
