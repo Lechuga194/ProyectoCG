@@ -17,7 +17,7 @@ const ctx = document.getElementById("the_canvas").getContext("2d");
 const input = document.querySelector('input[type="file"]');
 
 let verticesAux = []; //Arreglo auxiliar para guardar los vertices del parseo
-let vertices = []; //Arreglo que guardara los vertices
+let vertices = [0]; //Arreglo que guardara los vertices
 let caras = []; //Arreglo que guardara las caras
 let camara = new Vector3(3, 2, 4); //Define la posicion de la camara
 let pi = new Vector3(0, 0, 0); //Definie el punto de interes
@@ -54,6 +54,8 @@ function imageTransform(w, h, v) {
 input.addEventListener(
   "change",
   function(e) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.beginPath();
     const lector = new FileReader();
     lector.readAsText(input.files[0]);
 
@@ -95,12 +97,11 @@ input.addEventListener(
       });
       addVertices();
       let vertex;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = " rgb(255, 255, 255)";
       ctx.fillRect(10, 10, 100, 100);
-
       caras.forEach(cara => {
         cara.forEach((vertex_index, index) => {
+          // transformamos los vértices con la matriz de vista y proyección, realizando simplemente una multiplicación
           vertex = vistaProyeccion.multiplyVector(vertices[vertex_index]);
 
           // transformamos los vértices a coordenadas de pantalla para dibujarlos
@@ -135,27 +136,3 @@ function addVertices() {
     );
   }
 }
-
-// window.addEventListener("load", function(e) {
-//   let vertice;
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-//   ctx.fillStyle = " rgb(255, 255, 255)";
-
-//   //Iteramos sobre las caras
-//   for (let i = 0; i < caras.length; i++) {
-//     ctx.context.beginPath();
-//     //Iteramos sobre la j-esima cara
-//     for (let j = 0; j < caras[i].length; j++) {
-//       //multiplicamos los vertices con la matriz
-//       vertice = vistaProyeccion.multiplyVector(vertices[caras[j]]);
-//       vertice = imageTransform(canvas.width, canvas.height, vertice);
-//       if (i == 0) {
-//         ctx.moveTo(vertice.x, vertice.y);
-//       } else {
-//         ctx.lineTo(vertice.x, vertice.y);
-//       }
-//     }
-//     context.closePath();
-//     context.fill();
-//   }
-// });
