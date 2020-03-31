@@ -12,6 +12,9 @@ import { Matrix4 } from "./Matrix4.js";
 let canvas = document.getElementById("the_canvas");
 const ctx = document.getElementById("the_canvas").getContext("2d");
 
+//Seleccion del input
+const inputButton = document.getElementById("myFile");
+
 //Seleccion de el documento
 const input = document.querySelector('input[type="file"]');
 
@@ -46,6 +49,10 @@ let matrizProyeccion = Matrix4.perspective(
 
 // se crea una matrix que conjunta las transformaciones de la cámara y de la proyección
 let vistaProyeccion = Matrix4.multiply(matrizProyeccion, vista);
+
+inputButton.addEventListener("click", function() {
+  canvas.width = canvas.width; //Esto es para limpiar el canvas por completo
+});
 
 /**
  * Maneja los eventos para cuando cambian los input de la camara o el centro de interes
@@ -82,8 +89,6 @@ function imageTransform(w, h, v) {
 input.addEventListener(
   "change",
   function(e) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.beginPath();
     const lector = new FileReader();
     lector.readAsText(input.files[0]);
 
@@ -124,6 +129,7 @@ input.addEventListener(
         }
       });
       addVertices();
+      canvas.width = canvas.width; //Esto es para limpiar el canvas por completo
       dibuja();
     };
   },
@@ -147,6 +153,7 @@ function addVertices() {
  */
 function dibuja() {
   let vertex;
+  ctx.beginPath();
   ctx.strokeStyle = " rgb(233, 178, 188)";
   caras.forEach(cara => {
     cara.forEach((vertex_index, index) => {
@@ -161,8 +168,11 @@ function dibuja() {
       }
       ctx.lineTo(vertex.x, vertex.y);
     });
-
     ctx.closePath();
     ctx.stroke();
   });
+}
+
+function limpiar() {
+  canvas.width = canvas.width; //Esto es para limpiar el canvas por completo
 }
