@@ -34,7 +34,7 @@ let inputXYZ = [camX, camY, camZ, interX, interY, interZ];
 let verticesAux = []; //Arreglo auxiliar para guardar los vertices del parseo
 let vertices = [0]; //Arreglo que guardara los vertices (inicia con 0 por que los obj cuentan desde 1)
 let caras = []; //Arreglo que guardara las caras
-let camara = new Vector3(5, 5, 5); //Define la posicion de la camara
+let camara = new Vector3(0, 0, 3); //Define la posicion de la camara
 let pi = new Vector3(0, 0, 0); //Definie el punto de interes
 let vistaAux = new Vector3(0, 1, 0);
 let vista = Matrix4.lookAt(camara, pi, vistaAux); //Matriz de vista
@@ -50,15 +50,15 @@ let matrizProyeccion = Matrix4.perspective(
 // se crea una matrix que conjunta las transformaciones de la cámara y de la proyección
 let vistaProyeccion = Matrix4.multiply(matrizProyeccion, vista);
 
-inputButton.addEventListener("click", function() {
+inputButton.addEventListener("click", function () {
   canvas.width = canvas.width; //Esto es para limpiar el canvas por completo
 });
 
 /**
  * Maneja los eventos para cuando cambian los input de la camara o el centro de interes
  */
-inputXYZ.forEach(function(input) {
-  input.addEventListener("change", function() {
+inputXYZ.forEach(function (input) {
+  input.addEventListener("change", function () {
     canvas.width = canvas.width; //Esto es para limpiar el canvas por completo
     camara = new Vector3(camX.value, camY.value, camZ.value);
     pi = new Vector3(interX.value, interY.value, interZ.value);
@@ -77,7 +77,7 @@ function imageTransform(w, h, v) {
   return {
     x: ((v.x / v.w) * w) / 2 + w / 2,
     y: ((-v.y / v.w) * h) / 2 + h / 2,
-    z: v.z / v.w
+    z: v.z / v.w,
   };
 }
 
@@ -88,17 +88,17 @@ function imageTransform(w, h, v) {
  */
 input.addEventListener(
   "change",
-  function(e) {
+  function (e) {
     const lector = new FileReader();
     lector.readAsText(input.files[0]);
 
     /**
      * Parser para el archivo
      */
-    lector.onload = function() {
+    lector.onload = function () {
       const lineas = lector.result.split("\n"); //Separa el doc por lineas
 
-      lineas.forEach(linea => {
+      lineas.forEach((linea) => {
         //REGEX para vertices
         if (
           /v (-)?[0-9]+.[0-9]+ (-)?[0-9]+.[0-9]+ (-)?[0-9]+.[0-9]+/.test(linea)
@@ -155,7 +155,7 @@ function dibuja() {
   let vertex;
   ctx.beginPath();
   ctx.strokeStyle = " rgb(233, 178, 188)";
-  caras.forEach(cara => {
+  caras.forEach((cara) => {
     cara.forEach((vertex_index, index) => {
       // transformacion de vertices
       vertex = imageTransform(
@@ -171,8 +171,4 @@ function dibuja() {
     ctx.closePath();
     ctx.stroke();
   });
-}
-
-function limpiar() {
-  canvas.width = canvas.width; //Esto es para limpiar el canvas por completo
 }
